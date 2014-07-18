@@ -25,8 +25,8 @@
                 {{textarea value=message}}
               </div>
               <div class="col-1-4">
-                <button>EAM</button>
-                <button>Clear</button>
+                <button {{action 'eam'}}>EAM</button>
+                <button {{action 'clear'}}>Clear</button>
               </div>
             </div>
           </div>
@@ -35,7 +35,7 @@
           <div id="auth" class="module well">
             <h2>Auth</h2>
             {{input value=auth disabled=true }}
-            <button {{action 'new_auth'}}>Next</button>
+            <button {{action 'nextAuth'}}>Next</button>
           </div>
           <div id="pal" class="module well">
             <h2>PAL</h2>
@@ -61,7 +61,7 @@
         <div class="grid">
           {{#each icbms}}
               <div class="col-1-8">
-              <div class="module well">
+              <div class="module well icbm">
                 <div>ICBM {{_view.contentIndex}}</div>
                 <div>{{target}}</div>
                 <div>{{fuel}}</div>

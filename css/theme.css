@@ -17,6 +17,7 @@ textarea {
     border: 1px solid lime;
     border-radius: 5px;  
     resize: none;   
+    padding: 5px;
 }
 
 .well {
@@ -77,6 +78,20 @@ textarea {
       gray 10px,
       gray 20px
     );
+}
+
+.drill #launch button {
+    background: repeating-linear-gradient(
+      -45deg,
+      black,
+      black 10px,
+      orange 10px,
+      orange 20px
+    );
+}
+
+.drill .icbm {
+    border: 1px solid orange;
 }
 
 

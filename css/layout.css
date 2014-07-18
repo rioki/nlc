@@ -23,7 +23,7 @@
 
 #comms textarea {
     width:100%;
-    height: 265px;
+    height: 295px;
 }
 
 #comms button {
@@ -38,19 +38,19 @@
 
 #auth input {
     width: 45%;
-    height: 50px;
+    height: 40px;
 }
 
 #auth button {
     width: 45%;
-    height: 50px;
+    height: 40px;
 }
 
 #targets,
 #missile,
 #warhead,
 #launch {
-    min-height: 220px;
+    min-height: 260px;
 }
 
 #missile button,

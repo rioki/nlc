@@ -4,23 +4,48 @@ App.Router.map(function() {
     this.route('unlock');
 });
 
-var msg = 
-    //'*** DRILL *** DRILL *** DRILL ***\n' +
-    //'\n' +
-    'The release of nuclear weapons has been authorized.\n' +
-    '\n' +
-    'Athentication:  ABTZU\n' +
-    'Launch Code:    125877\n' +
-    'Target Package: TP078\n'
+function makeAuthCode() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+function makePalCode()
+{
+    var text = "";
+    var possible = "0123456789";
+
+    for (var i = 0; i < 6; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+function makeTargetPackage() {
+    var text = "TP";
+    var possible = "0123456789";
+
+    for (var i = 0; i < 3; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 var state = {
     locked:        true,
     lockCode:      '1337',
-    message:       msg,
-    auth:          'ABTZU',
+    message:       '',
+    auth:          '',
+    authRing:      [],
+    authIndex:     0, // the index of the authenticator
+    authRIndex:    0, // the index of the message generator
     pal:           'locked',
-    palCode:       '125877',
+    palCode:       makePalCode(),
+    palDrillCodes: [],
     palInput:      '',
     targetPackage: '',
     icbms: [
@@ -35,6 +60,26 @@ var state = {
     ]
 };
 
+for (i = 0; i < 100; i++) {
+    state.authRing.push(makeAuthCode());
+    state.palDrillCodes.push(makePalCode());
+}
+
+function createDrillMessage(auth) {
+    var dc = Math.floor(Math.random() * state.palDrillCodes.length);
+    return '*** DRILL *** DRILL *** DRILL ***\n' +
+           '\n' +
+           'The release of nuclear weapons has been authorized.\n' +
+           '\n' +
+           'Athentication:  ' + state.authRing[auth]    + '\n' +
+           'Launch Code:    ' + state.palDrillCodes[dc] + '\n' +
+           'Target Package: ' + makeTargetPackage()     + '\n';           
+}
+
+function palOk(pal) {
+    return pal == 'unlocked' || pal == 'drill';
+}
+    
 App.IndexRoute = Ember.Route.extend({
     beforeModel: function() {
         if (state.locked) {
@@ -45,6 +90,31 @@ App.IndexRoute = Ember.Route.extend({
         return state;
     },
     actions: {
+        eam: function () {
+            var auth = this.controller.get('authRIndex');
+            this.controller.set('message', createDrillMessage(auth));
+            
+            auth++;
+            if (auth == state.authRing.length)
+            {
+                auth = 0;
+            }            
+            this.controller.set('authRIndex', auth);
+        },
+        clear: function () {
+            this.controller.set('message', '');
+        },
+        nextAuth: function () {
+            var i = this.controller.get('authIndex');
+            this.controller.set('auth', state.authRing[i]);
+            
+            i++;
+            if (i == state.authRing.length)
+            {
+                i = 0;
+            }            
+            this.controller.set('authIndex', i);
+        },
         pal1: function () {
             this.controller.set('palInput', this.controller.get('palInput') + '1');
         },
@@ -77,82 +147,81 @@ App.IndexRoute = Ember.Route.extend({
         },
         pale: function () {
             var input = this.controller.get('palInput');
-            if (input == state.palCode)
-            {
+            if (input == state.palCode) {
                 this.controller.set('pal', 'unlocked');
             }
             else
             {
-                // play sound?
-                this.controller.set('palInput', '');
+                var drill = false;
+                var controller = this.controller;
+                state.palDrillCodes.forEach(function (code) {
+                    if (input == code) {
+                        controller.set('pal', 'drill');
+                        drill = true;                        
+                    }
+                });
+                if (drill == false)
+                {
+                    this.controller.set('palInput', '');
+                }
             }
         },
         palc: function () {
             this.controller.set('palInput', '');
         },
         tp1: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '1');
             }
         },
         tp2: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '2');
             }
         },
         tp3: function () {
-            if (this.controller.get('pal') === 'unlocked')
+            if (palOk(this.controller.get('pal')))
             {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '3');
             }
         },
         tp4: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '4');
             }
         },
         tp5: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '5');
             }
         },
         tp6: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '6');
             }
         },
         tp7: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '7');
             }
         },
         tp8: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '8');
             }
         },
         tp9: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '9');
             }
         },
         tp0: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', this.controller.get('targetPackage') + '0');
             }
         },
         tpe: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 var icbms  = this.controller.get('icbms');
                 var target = this.controller.get('targetPackage'); 
                 icbms.forEach(function (icbm, i) {
@@ -161,14 +230,12 @@ App.IndexRoute = Ember.Route.extend({
             }            
         },
         tpc: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 this.controller.set('targetPackage', '');
             }
         }, 
         fuel: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 var icbms  = this.controller.get('icbms');
                 console.log(icbms);
                 icbms.forEach(function (icbm, i) {
@@ -178,10 +245,8 @@ App.IndexRoute = Ember.Route.extend({
             } 
         },
         unfuel: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 var icbms  = this.controller.get('icbms');
-                console.log(icbms);
                 icbms.forEach(function (icbm, i) {
                     // TODO fueling
                     Ember.set(icbm, 'fuel',  'No Fuel');
@@ -189,28 +254,23 @@ App.IndexRoute = Ember.Route.extend({
             } 
         },
         arm: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 var icbms  = this.controller.get('icbms');
-                console.log(icbms);
                 icbms.forEach(function (icbm, i) {
                     Ember.set(icbm, 'arm',  'Armed');
                 });                
             } 
         },
         disarm: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (palOk(this.controller.get('pal'))) {
                 var icbms  = this.controller.get('icbms');
-                console.log(icbms);
                 icbms.forEach(function (icbm, i) {
-                    Ember.set(icbm, 'arm',  'Disarmed');
+                    Ember.set(icbm, 'arm',  'Unarmed');
                 });                
             } 
         },
         launch: function () {
-            if (this.controller.get('pal') === 'unlocked')
-            {
+            if (this.controller.get('pal') == 'unlocked') {
                 var icbms  = this.controller.get('icbms');
                 console.log(icbms);
                 icbms.forEach(function (icbm, i) {
@@ -220,9 +280,21 @@ App.IndexRoute = Ember.Route.extend({
                         Ember.set(icbm, 'arm',  'No Data');
                     }, i * 1500);
                 });                
-            } 
-        },
-        
+            }
+            else if (this.controller.get('pal') == 'drill') {
+                this.controller.set('pal', 'locked');
+                this.controller.set('message', 'drill success');
+                this.controller.set('palInput', '');
+                this.controller.set('targetPackage', '');
+                
+                var icbms  = this.controller.get('icbms');
+                icbms.forEach(function (icbm, i) {
+                    Ember.set(icbm, 'target',  'No Target');
+                    Ember.set(icbm, 'fuel',    'No Fuel');
+                    Ember.set(icbm, 'arm',     'Unarmed');
+                });
+            }
+        }        
     }
 });
 
