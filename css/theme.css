@@ -1,0 +1,82 @@
+
+body {
+    background:  black;
+    color:       lime;
+    font-family: "Andale Mono", AndaleMono, monospace;
+}
+
+h1, h2 {
+    margin: 5px;
+}
+
+input,
+button,
+textarea {
+    color: lime;
+    background: black;
+    border: 1px solid lime;
+    border-radius: 5px;  
+    resize: none;   
+}
+
+.well {
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.keypad {
+    width: 160px;    
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    margin: 5px auto;
+}
+
+.keypad input {
+    width: 145px;
+    border-radius: 5px;    
+}
+
+.keypad button {
+    width: 42px;       
+    margin: 5px 0;
+}
+
+#launch button {
+    color: red;
+    border: 2px solid red;
+    font-size: 200%;
+    font-weight: bold;  
+    background: repeating-linear-gradient(
+      -45deg,
+      black,
+      black 10px,
+      #400000 10px,
+      #400000 20px
+    );
+}
+
+.locked,
+.locked button,
+.locked input,
+.locked .well,
+.locked .keypad {
+    color: silver;
+    border-color: silver;
+}
+
+.locked #launch button {
+    color: silver;
+    border-color: silver;
+    background: repeating-linear-gradient(
+      -45deg,
+      black,
+      black 10px,
+      gray 10px,
+      gray 20px
+    );
+}
+
+
