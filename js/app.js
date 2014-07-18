@@ -5,9 +5,9 @@ App.Router.map(function() {
 });
 
 var msg = 
-    '*** DRILL *** DRILL *** DRILL ***\n' +
-    '\n' +
-    'The release of nuclear weapons has be autherized.\n' +
+    //'*** DRILL *** DRILL *** DRILL ***\n' +
+    //'\n' +
+    'The release of nuclear weapons has been authorized.\n' +
     '\n' +
     'Athentication:  ABTZU\n' +
     'Launch Code:    125877\n' +
@@ -15,7 +15,7 @@ var msg =
 
 
 var state = {
-    locked:        false,
+    locked:        true,
     lockCode:      '1337',
     message:       msg,
     auth:          'ABTZU',
