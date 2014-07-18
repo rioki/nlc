@@ -1,4 +1,37 @@
-/* Put your CSS here */
-.ember-application {
-    margin: 20px;
+
+body {
+    background:  black;
+    color:       lime;
+    font-family: "Andale Mono", AndaleMono, monospace;
+}
+
+#unlock {
+    width: 20em;
+    margin: 10em auto;
+    text-align: center;
+}
+
+.keypad {
+    width: 150px;
+    margin: 0 auto;
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.keypad input {
+    width: 145px;
+    color: lime;
+    background: black;
+    border: 1px solid lime;
+    border-radius: 5px;    
+}
+
+.keypad button {
+    width: 42px;
+    color: lime;
+    background: black;
+    border: 1px solid lime;
+    border-radius: 5px;    
+    margin: 5px 0;
 }
