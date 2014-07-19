@@ -22,7 +22,7 @@
             <h2>Comm</h2>
             <div class="grid">
               <div class="col-3-4">
-                {{textarea value=message}}
+                {{textarea value=message disabled=true}}
               </div>
               <div class="col-1-4">
                 <button {{action 'eam'}}>EAM</button>
@@ -75,7 +75,7 @@
             <div id="targets" class="module well">
               <h2>Target</h2>
               <div class="keypad">
-                {{input value=targetPackage type="text"}}
+                {{input value=targetPackage type="text" disabled=true}}
                 <button {{action 'tp1'}}>1</button>
                 <button {{action 'tp2'}}>2</button>
                 <button {{action 'tp3'}}>3</button>
@@ -119,7 +119,7 @@
       <div id="unlock">
         <!--<h1>Nuclear Launch Console V0.0</h1>-->
         <div class="keypad">
-          {{input value=input type="password"}}
+          {{input value=input type="password" disabled=true}}
           <button {{action 'kp1'}}>1</button>
           <button {{action 'kp2'}}>2</button>
           <button {{action 'kp3'}}>3</button>
