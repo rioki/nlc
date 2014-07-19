@@ -71,10 +71,20 @@ function createDrillMessage(auth) {
            '\n' +
            'The release of nuclear weapons has been authorized.\n' +
            '\n' +
-           'Athentication:  ' + state.authRing[auth]    + '\n' +
+           'Authentication: ' + state.authRing[auth]    + '\n' +
            'Launch Code:    ' + state.palDrillCodes[dc] + '\n' +
            'Target Package: ' + makeTargetPackage()     + '\n';           
 }
+
+function createMessage(auth) {
+    var dc = Math.floor(Math.random() * state.palDrillCodes.length);
+    return 'The release of nuclear weapons has been authorized.\n' +
+           '\n' +
+           'Authentication: ' + state.authRing[auth]    + '\n' +
+           'Launch Code:    ' + state.palCode           + '\n' +
+           'Target Package: ' + makeTargetPackage()     + '\n';           
+}
+
 
 function palOk(pal) {
     return pal == 'unlocked' || pal == 'drill';
@@ -92,7 +102,8 @@ App.IndexRoute = Ember.Route.extend({
     actions: {
         eam: function () {
             var auth = this.controller.get('authRIndex');
-            this.controller.set('message', createDrillMessage(auth));
+            //this.controller.set('message', createDrillMessage(auth));
+            this.controller.set('message', createMessage(auth));            
             
             auth++;
             if (auth == state.authRing.length)
