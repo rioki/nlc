@@ -36,18 +36,20 @@ function makeTargetPackage() {
 }
 
 var state = {
-    locked:        true,
-    lockCode:      '1337',
-    message:       '',
-    auth:          '',
-    authRing:      [],
-    authIndex:     0, // the index of the authenticator
-    authRIndex:    0, // the index of the message generator
-    pal:           'locked',
-    palCode:       makePalCode(),
-    palDrillCodes: [],
-    palInput:      '',
-    targetPackage: '',
+    locked:          false,
+    lockCode:        '1337',
+    eam:             '',
+    message:         '',
+    pendingMessages: [],
+    auth:            '',
+    authRing:        [],
+    authIndex:       0, // the index of the authenticator
+    authRIndex:      0, // the index of the message generator
+    pal:             'locked',
+    palCode:         makePalCode(),
+    palDrillCodes:   [],
+    palInput:        '',
+    targetPackage:   '',
     icbms: [
         {target: 'No Target', fuel: 'No Fuel', arm: 'Unarmed'},
         {target: 'No Target', fuel: 'No Fuel', arm: 'Unarmed'},
@@ -97,13 +99,10 @@ App.IndexRoute = Ember.Route.extend({
         }
     },
     model: function() {
-        return state;
-    },
-    actions: {
-        eam: function () {
+        /*setTimeout(function () {
             var auth = this.controller.get('authRIndex');
-            //this.controller.set('message', createDrillMessage(auth));
-            this.controller.set('message', createMessage(auth));            
+            
+            state.pendingMessages.push(createDrillMessage(auth));            
             
             auth++;
             if (auth == state.authRing.length)
@@ -111,9 +110,39 @@ App.IndexRoute = Ember.Route.extend({
                 auth = 0;
             }            
             this.controller.set('authRIndex', auth);
+            this.controller.set('eam', 'eam');
+        }, 1000);*/
+    
+        return state;
+    },
+    actions: {
+        eam: function () {
+            if (state.pendingMessages.length != 0) {
+                this.controller.set('message', state.pendingMessages.pop());
+                if (state.pendingMessages.length != 0) {
+                    this.controller.set('eam', 'eam');
+                }
+                else {
+                    this.controller.set('eam', '');
+                }                
+            }            
         },
         clear: function () {
             this.controller.set('message', '');
+            var controller = this.controller;
+            setTimeout(function () {
+                var auth = controller.get('authRIndex');
+                
+                state.pendingMessages.push(createDrillMessage(auth));            
+                
+                auth++;
+                if (auth == state.authRing.length)
+                {
+                    auth = 0;
+                }            
+                controller.set('authRIndex', auth);
+                controller.set('eam', 'eam');
+            }, 1000);
         },
         nextAuth: function () {
             var i = this.controller.get('authIndex');
