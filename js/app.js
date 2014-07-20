@@ -6,8 +6,8 @@ App.Router.map(function() {
 });
 
 function makeAuthCode() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -17,8 +17,8 @@ function makeAuthCode() {
 
 function makePalCode()
 {
-    var text = "";
-    var possible = "0123456789";
+    var text = '';
+    var possible = '0123456789';
 
     for (var i = 0; i < 6; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -27,8 +27,8 @@ function makePalCode()
 }
 
 function makeTargetPackage() {
-    var text = "TP";
-    var possible = "0123456789";
+    var text = '';
+    var possible = '0123456789';
 
     for (var i = 0; i < 3; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -79,6 +79,38 @@ function getDrillCode(controller) {
     return palDrillCodes[i];
 }
 
+function startDrill(ctrl) {
+    var auth         = nextRAuth(ctrl);
+    var pal          = getDrillCode(ctrl);
+    var tp           = makeTargetPackage();            
+    var messageQueue = ctrl.get('messageQueue');
+    messageQueue.pushObject(createDrillMessage(auth, pal, tp));
+    ctrl.set('drillTarget', tp);
+    ctrl.set('drillStart', new Date());
+}
+
+function drillResults(ctrl) {
+    
+    var icbms = ctrl.get('model.icbms');
+    
+    var ta = ctrl.get('drillTarget') + '/0' == icbms[0].target ? 'Pass' : 'Fail';
+    var mf = icbms[0].fuel == 100 ? 'Pass' : 'Fail';
+    var wa = icbms[0].arm ? 'Pass' : 'Fail';
+    
+    var dur = Math.round((new Date() - ctrl.get('drillStart')) / 1000);
+    var tl  = dur < 60 ? 'Pass' : 'Fail';
+
+    var msg = 'Drill Results:\n' + 
+              '\n'+
+              '  Target Assignment:        ' + ta + '\n' + 
+              '  Missile Fuelling:         ' + mf + '\n' + 
+              '  Warhead Armed:            ' + wa + '\n' +
+              '  Launch:                   Pass\n' +
+              '  Duration:                 ' + dur + 's\n' +
+              '  Time Limit:               ' + tl + '\n';
+    return msg;
+}
+
 App.IndexRoute = Ember.Route.extend({
     beforeModel: function() {
         this.transitionTo('unlock');
@@ -112,12 +144,7 @@ App.ConsoleRoute = Ember.Route.extend({
         controller.set('model', model);
         
         setTimeout(function () {
-            var auth         = nextRAuth(controller);
-            //var pal          = getDrillCode(controller);
-            var pal          = controller.get('model.palCode');
-            var tp           = makeTargetPackage();
-            var messageQueue = controller.get('messageQueue');
-            messageQueue.pushObject(createMessage(auth, pal, tp));
+            startDrill(controller);
         }, 2000);
     }
 });
@@ -132,6 +159,8 @@ App.ConsoleController = Ember.Controller.extend({
     palInput:     '',
     tpInput:      '',
     fueling:      0,
+    drillTarget:  '',
+    drillStart:   new Date(),
     actions: {
         eam: function () {
             var messageQueue = this.get('messageQueue');
@@ -305,7 +334,7 @@ App.ConsoleController = Ember.Controller.extend({
                         ctrl.set('fueling', 0);
                         clearInterval(i);
                     }
-                }, 800);
+                }, 500);
             } 
         },
         unfuel: function () {
@@ -366,10 +395,10 @@ App.ConsoleController = Ember.Controller.extend({
                 });                
             }
             else if (this.get('pal') == 'drill') {
-                this.set('pal', 'locked');
-                this.set('message', 'drill success');
+                this.set('pal',      'locked');
+                this.set('message',  drillResults(this));
                 this.set('palInput', '');
-                this.set('tpInput', '');
+                this.set('tpInput',  '');
                 
                 var icbms  = this.get('model.icbms');
                 icbms.forEach(function (icbm, i) {

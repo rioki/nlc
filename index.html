@@ -92,7 +92,14 @@
             </div>
           {{/each}}
         </div>        
-        <div class="grid">        
+        <div class="grid">  
+          <div class="col-1-4">
+            <div id="missile" class="module well">
+              <h2>Missile</h2>
+              <button {{action 'fuel'}}>Fuel</button>
+              <button {{action 'unfuel'}}>Unfuel</button>            
+            </div>        
+          </div>
           <div class="col-1-4">
             <div id="targets" class="module well">
               <h2>Target</h2>
@@ -112,14 +119,7 @@
                 <button {{action 'tpc'}}>C</button>        
               </div>
             </div>        
-          </div>   
-          <div class="col-1-4">
-            <div id="missile" class="module well">
-              <h2>Missile</h2>
-              <button {{action 'fuel'}}>Fuel</button>
-              <button {{action 'unfuel'}}>Unfuel</button>            
-            </div>        
-          </div>
+          </div>             
           <div class="col-1-4">
             <div id="warhead" class="module well">
               <h2>Warhead</h2>
