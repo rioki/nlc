@@ -13,7 +13,7 @@
     {{outlet}}
   </script>
 
-  <script type="text/x-handlebars" id="index">
+  <script type="text/x-handlebars" id="console">
     <div id="console">
       <h1>Nuclear Launch Console V0.0</h1>
       <div class="grid">
@@ -25,7 +25,11 @@
                 {{textarea value=message disabled=true}}
               </div>
               <div class="col-1-4">
-                <button {{action 'eam'}} {{bind-attr class=eam}}>EAM</button>
+                {{#if messageQueue}}
+                  <button {{action 'eam'}} class="eam">EAM</button>
+                {{else}}
+                  <button>EAM</button>
+                {{/if}}
                 <button {{action 'clear'}}>Clear</button>
               </div>
             </div>
@@ -59,13 +63,31 @@
       </div>
       <div {{bind-attr class=pal}}>
         <div class="grid">
-          {{#each icbms}}
-              <div class="col-1-8">
+          {{#each model.icbms}}
+            <div class="col-1-8">
               <div class="module well icbm">
                 <div>ICBM {{_view.contentIndex}}</div>
-                <div>{{target}}</div>
-                <div>{{fuel}}</div>
-                <div>{{arm}}</div>
+                {{#if launched }}
+                  <div>No Data</div>                  
+                  <div>No Data</div>
+                  <div>No Data</div>
+                {{else}}                  
+                  {{#if target }}
+                    <div>{{target}}</div>
+                  {{else}}
+                    <div>No Target</div>
+                  {{/if}}
+                  {{#if fuel }}
+                    <div>Fuel {{fuel}}%</div>
+                  {{else}}
+                    <div>No Target</div>
+                  {{/if}} 
+                  {{#if arm }}
+                    <div>Armed</div>
+                  {{else}}
+                    <div>Disarmed</div>                    
+                  {{/if}} 
+                {{/if}}
               </div>
             </div>
           {{/each}}
@@ -75,7 +97,7 @@
             <div id="targets" class="module well">
               <h2>Target</h2>
               <div class="keypad">
-                {{input value=targetPackage type="text" disabled=true}}
+                {{input value=tpInput type="text" disabled=true}}
                 <button {{action 'tp1'}}>1</button>
                 <button {{action 'tp2'}}>2</button>
                 <button {{action 'tp3'}}>3</button>
