@@ -54,6 +54,17 @@ function createMessage(auth, pal, tp) {
            'Target Package: ' + tp   + '\n';          
 }
 
+function createTutorialMessage(auth) {
+    return 'Welcome Operator.\n' +
+           '\n' +
+           'You where selected as an operator at Strategic Nuclear Command (SNC) ' +
+           'facility 14.\n' +
+           '\n' + 
+           '<Instructions>\n' +
+           '\n' +
+           'Authentication: ' + auth + '\n';
+}
+
 function palOk(pal) {
     return pal == 'unlocked' || pal == 'drill';
 }
@@ -143,9 +154,29 @@ App.ConsoleRoute = Ember.Route.extend({
     setupController: function(controller, model) {
         controller.set('model', model);
         
+        createTutorialMessage
         setTimeout(function () {
+            var auth         = nextRAuth(controller);
+            var messageQueue = controller.get('messageQueue');
+            messageQueue.pushObject(createTutorialMessage(auth));
+        }, 2000)
+        
+        var count = 0;
+        var i = setInterval(function () {
             startDrill(controller);
-        }, 2000);
+            
+            count++;
+            if (count == 5) {
+                clearInterval(i);
+                setTimeout(function () {
+                    var auth         = nextRAuth(controller);
+                    var pal          = controller.get('model.palCode');
+                    var tp           = makeTargetPackage();            
+                    var messageQueue = controller.get('messageQueue');
+                    messageQueue.pushObject(createMessage(auth, pal, tp));
+                }, 120000)
+            }
+        }, 120000);
     }
 });
 
@@ -334,7 +365,7 @@ App.ConsoleController = Ember.Controller.extend({
                         ctrl.set('fueling', 0);
                         clearInterval(i);
                     }
-                }, 500);
+                }, 400);
             } 
         },
         unfuel: function () {
