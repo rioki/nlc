@@ -131,6 +131,7 @@ App.ConsoleController = Ember.Controller.extend({
     pal:          'locked',
     palInput:     '',
     tpInput:      '',
+    fueling:      0,
     actions: {
         eam: function () {
             var messageQueue = this.get('messageQueue');
@@ -277,21 +278,66 @@ App.ConsoleController = Ember.Controller.extend({
         },
         fuel: function () {
             if (palOk(this.get('pal'))) {
-                var icbms  = this.get('model.icbms');
-                console.log(icbms);
-                icbms.forEach(function (icbm, i) {
-                    // TODO fueling
-                    Ember.set(icbm, 'fuel',  100);
-                });                
+                var fueling = this.get('fueling');
+                if (fueling == 1) {
+                    return;
+                }
+                this.set('fueling', 1);
+                
+                var ctrl = this;
+                var i = setInterval(function () {
+                    if (ctrl.get('fueling') != 1) {
+                        clearInterval(i);
+                        return;
+                    }
+                
+                    var done  = false;
+                    var icbms = ctrl.get('model.icbms');
+                    icbms.forEach(function (icbm, i) {
+                        var fuel = icbm.fuel + 1;
+                        if (fuel == 100) {
+                            done = true;
+                        }                        
+                        Ember.set(icbm, 'fuel', fuel);
+                    });
+                    
+                    if (done) {
+                        ctrl.set('fueling', 0);
+                        clearInterval(i);
+                    }
+                }, 800);
             } 
         },
         unfuel: function () {
             if (palOk(this.get('pal'))) {
-                var icbms  = this.get('model.icbms');
-                icbms.forEach(function (icbm, i) {
-                    // TODO fueling
-                    Ember.set(icbm, 'fuel',  0);
-                });                
+                var fueling = this.get('fueling');
+                if (fueling == -1) {
+                    return;
+                }
+                this.set('fueling', -1);
+                
+                var ctrl = this;
+                var i = setInterval(function () {
+                    if (ctrl.get('fueling') != -1) {
+                        clearInterval(i);
+                        return;
+                    }
+                    
+                    var done   = false;
+                    var icbms  = ctrl.get('model.icbms');
+                    icbms.forEach(function (icbm, i) {
+                        var fuel = icbm.fuel - 1;
+                        if (fuel == 0) {
+                            done = true;
+                        }                        
+                        Ember.set(icbm, 'fuel', fuel);
+                    });
+                    
+                    if (done) {
+                        ctrl.set('fueling', 0);
+                        clearInterval(i);
+                    }
+                }, 800);              
             } 
         },
         arm: function () {
