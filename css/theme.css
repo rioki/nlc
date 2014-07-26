@@ -100,3 +100,17 @@ button.eam {
     background: #3A9C31;    
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    border-radius: 5px;
+    border: 1px solid lime;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 1px solid lime;
+    background: #3A9C31;
+}

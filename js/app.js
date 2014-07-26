@@ -3,6 +3,8 @@ App = Ember.Application.create();
 App.Router.map(function() {
     this.route('unlock');
     this.route('console');
+    this.route('fail');
+    this.route('success');
 });
 
 function makeAuthCode() {
@@ -55,12 +57,28 @@ function createMessage(auth, pal, tp) {
 }
 
 function createTutorialMessage(auth) {
-    return 'Welcome Operator.\n' +
+    return 'Operator, your task is to ensure our nations safety by providing our ' +
+           'commander in chief a nuclear option and preventing unauthorized ' +
+           'access to our nuclear arsenal.\n' +
            '\n' +
-           'You where selected as an operator at Strategic Nuclear Command (SNC) ' +
-           'facility 14.\n' +
-           '\n' + 
-           '<Instructions>\n' +
+           'All messages are authenticated by a code ring. Ensure that messages ' +
+           'are properly authenticated. The authenticator ring is advanced with ' +
+           'the "Next" button.\n' +
+           '\n' +
+           'A launch command will be sent via an Emergency Action Message (EAM). ' +
+           'The launch command will contain a valid PAL code, a target package ' +
+           'and the message will authenticate.\n' +
+           '\n' +
+           'The nuclear weapons are secured by Permissive Action Link (PAL). ' +
+           'This unit is secured by a previously configured code. Additionally ' +
+           'this unit is configured with a number of training codes that will be ' +
+           'used during drills.\n' +
+           '\n' +
+           'To launch a nuclear weapon:\n' +
+           '  * fuel missile\n' +
+           '  * assign target\n' +
+           '  * arm warhead\n' +
+           '  * launch\n' +
            '\n' +
            'Authentication: ' + auth + '\n';
 }
@@ -501,5 +519,4 @@ App.UnlockController = Ember.Controller.extend({
         }
     }
 });
-
 
