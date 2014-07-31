@@ -140,6 +140,9 @@
     <script type="text/x-handlebars" id="unlock">
       <div id="unlock">
         <!--<h1>Nuclear Launch Console V0.0</h1>-->
+        <div class="note">
+          Today's Code: <br/> {{model.code}}
+        </div>
         <div class="keypad">
           {{input value=input type="password" disabled=true}}
           <button {{action 'kp1'}}>1</button>

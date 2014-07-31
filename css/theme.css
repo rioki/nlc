@@ -98,6 +98,52 @@ textarea {
 button.eam {
     color: black;
     background: #3A9C31;    
+    
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 2s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blinker;
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blinker {  
+    0% { background: #3A9C31;  }
+    50% { background: #2F7829; }
+    100% { background: #3A9C31;  }
+}
+
+@-webkit-keyframes blinker {  
+    0% { background: #3A9C31;  }
+    50% { background: #2F7829; }
+    100% { background: #3A9C31;  }
+}
+
+@keyframes blinker {  
+    0% { background: #3A9C31;  }
+    50% { background: #2F7829; }
+    100% { background: #3A9C31;  }
+}
+
+.note {
+    width: 150px;
+    height: 180px;
+    color: #333;
+    color: black;
+    background: #eae672;
+    padding: 5px;
+    padding-top: 50px;
+    font-family: "Brush Script MT", cursive;
+    transform: rotate(10deg);
+
 }
 
 ::-webkit-scrollbar {

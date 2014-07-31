@@ -7,6 +7,17 @@ App.Router.map(function() {
     this.route('success');
 });
 
+function makeLockCode()
+{
+    var text = '';
+    var possible = '0123456789';
+
+    for (var i = 0; i < 4; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 function makeAuthCode() {
     var text = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -462,7 +473,7 @@ App.ConsoleController = Ember.Controller.extend({
 
 App.UnlockRoute = Ember.Route.extend({
     model: function() {
-        return {code: '1337'};
+        return {code: makeLockCode()};
     }
 });
 
