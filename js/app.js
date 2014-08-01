@@ -117,7 +117,7 @@ function createUpdateMessage(auth) {
     tp.sort();
     
     return 'Target packages '+tp[0]+', '+tp[1]+', '+tp[2]+', '+tp[3]+' and '+tp[4]+' ' +
-           'have been updated to reflect new inteligence.\n' +
+           'have been updated to reflect new intelligence.\n' +
            '\n' +
            'Authentication: ' + auth + '\n';
 }
