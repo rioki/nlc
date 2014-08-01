@@ -10,8 +10,8 @@
 </head>
 <body>
   <script type="text/x-handlebars">
-    <div class="header">
-      <a href="about.html">About</a>
+    <div class="header">      
+      {{#link-to 'about'}}About{{/link-to}}
       <a href="http://www.rioki.org/imprint.html">Imprint</a>
     </div>
     {{outlet}}
@@ -163,6 +163,34 @@
         </div>
       </div>
     </div>
+  </script>
+  
+  <script type="text/x-handlebars" id="about">
+    <div id="about">
+      <h1>Nuclear Launch Console V0.1</h1>
+      <div class="title">Idea & Implementation</div>
+      <div class="person"><a href="http://www.rioki.org/">Sean "rioki" Farrell</a></div>
+      
+      <div class="title">Testers</div>
+      <div class="person">"desu"</div>
+      <div class="person">"case"</div>
+      
+      <div class="title">Additional Writing</div>
+      <div class="person"><a hreF="http://tegwin.tumblr.com/">Vivien "tegwin" Gerlach-Farrell</div>
+      
+      <div class="title">Additional Software</div>
+      <div class="person"><a hreF="http://emberjs.com/">ember.js</a></div>
+      <div class="person"><a hreF="http://handlebarsjs.com/">handelbars.js</a></div>
+      <div class="person"><a hreF="https://jquery.com/">jquery.js</a></div>    
+    </div>
+  </script>
+  
+  <script type="text/x-handlebars" id="launch">
+    launch
+  </script>
+  
+  <script type="text/x-handlebars" id="nolaunch">
+    nolaunch
   </script>
   
   <script src="js/libs/jquery-1.10.2.js"></script>

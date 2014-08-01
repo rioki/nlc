@@ -3,8 +3,9 @@ App = Ember.Application.create();
 App.Router.map(function() {
     this.route('unlock');
     this.route('console');
-    this.route('fail');
-    this.route('success');
+    this.route('about');
+    this.route('launch');
+    this.route('nolaunch');
 });
 
 function makeLockCode()
