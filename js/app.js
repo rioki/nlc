@@ -122,6 +122,20 @@ function createUpdateMessage(auth) {
            'Authentication: ' + auth + '\n';
 }
 
+function createNoLaunchMessage(auth) {    
+    return 'You failed to follow orders. You will be court martialed.\n' +
+           '\n' + 
+           'Authentication: ' + auth + '\n';
+}
+
+function createLaunchMessage(auth) {    
+    return 'Well done. You are relieved of your post.\n' +
+           '\n' +
+           'Regroup at fallout shelter A03. You have 25 min before the shelter is put into lock down.\n' +
+           '\n' + 
+           'Authentication: ' + auth + '\n';
+}
+
 function palOk(pal) {
     return pal == 'unlocked' || pal == 'drill';
 }
@@ -153,7 +167,7 @@ function startDrill(ctrl) {
     var tp           = makeTargetPackage();            
     var messageQueue = ctrl.get('messageQueue');
     messageQueue.pushObject(createDrillMessage(auth, pal, tp));
-    ctrl.set('drillTarget', tp);
+    ctrl.set('targetPackage', tp);
     ctrl.set('drillStart', new Date());
 }
 
@@ -161,7 +175,7 @@ function drillResults(ctrl) {
     
     var icbms = ctrl.get('model.icbms');
     
-    var ta = ctrl.get('drillTarget') + '/0' == icbms[0].target ? 'Pass' : 'Fail';
+    var ta = ctrl.get('targetPackage') + '/0' == icbms[0].target ? 'Pass' : 'Fail';
     var mf = icbms[0].fuel == 100 ? 'Pass' : 'Fail';
     var wa = icbms[0].arm ? 'Pass' : 'Fail';
     
@@ -177,6 +191,43 @@ function drillResults(ctrl) {
               '  Duration:                 ' + dur + 's\n' +
               '  Time Limit:               ' + tl + '\n';
     return msg;
+}
+
+function checkLaunch(ctrl) {
+    var icbms = ctrl.get('model.icbms');
+    var ok = icbms[0].launched &&
+             icbms[0].target == ctrl.get('targetPackage') + '/0' &&
+             icbms[0].fuel == 100 &&
+             icbms[0].arm;
+    
+    var auth = nextRAuth(ctrl);
+    var messageQueue = ctrl.get('messageQueue');
+    if (ok) {
+        messageQueue.pushObject(createLaunchMessage(auth));
+        setTimeout(function () {
+            ctrl.transitionToRoute('launch');
+        }, 15000);        
+    }
+    else {
+        messageQueue.pushObject(createNoLaunchMessage(auth));
+        setTimeout(function () {
+            ctrl.transitionToRoute('nolaunch');
+        }, 15000);
+    }
+}
+
+function startLaunch(ctrl) {
+    var auth         = nextRAuth(ctrl);
+    var pal          = ctrl.get('model.palCode');
+    var tp           = makeTargetPackage();            
+    ctrl.set('targetPackage', tp);
+    var messageQueue = ctrl.get('messageQueue');
+    messageQueue.pushObject(createMessage(auth, pal, tp));
+    
+    // check back in 1.5 min                    
+    setTimeout(function () {
+        checkLaunch(ctrl);
+    }, 90000);
 }
 
 App.IndexRoute = Ember.Route.extend({
@@ -211,7 +262,6 @@ App.ConsoleRoute = Ember.Route.extend({
     setupController: function(controller, model) {
         controller.set('model', model);
         
-        createTutorialMessage
         setTimeout(function () {
             var auth         = nextRAuth(controller);
             var messageQueue = controller.get('messageQueue');
@@ -228,7 +278,7 @@ App.ConsoleRoute = Ember.Route.extend({
                     var auth         = nextRAuth(controller);
                     var messageQueue = controller.get('messageQueue');
                     messageQueue.pushObject(createAlertMessage(auth));
-                }, 65000)
+                }, 65000);
             }
             
             if (count == 4) {
@@ -243,11 +293,7 @@ App.ConsoleRoute = Ember.Route.extend({
             if (count == 5) {
                 clearInterval(i);
                 setTimeout(function () {
-                    var auth         = nextRAuth(controller);
-                    var pal          = controller.get('model.palCode');
-                    var tp           = makeTargetPackage();            
-                    var messageQueue = controller.get('messageQueue');
-                    messageQueue.pushObject(createMessage(auth, pal, tp));
+                    startLaunch(controller);                    
                 }, 120000);
             }
         }, 120000);
@@ -264,7 +310,7 @@ App.ConsoleController = Ember.Controller.extend({
     palInput:     '',
     tpInput:      '',
     fueling:      0,
-    drillTarget:  '',
+    targetPackage:  '',
     drillStart:   new Date(),
     actions: {
         eam: function () {
@@ -399,9 +445,9 @@ App.ConsoleController = Ember.Controller.extend({
         tpe: function () {
             if (palOk(this.get('pal'))) {
                 var icbms  = this.get('model.icbms');
-                var target = this.get('tpInput'); 
+                var targetPackage = this.get('tpInput'); 
                 icbms.forEach(function (icbm, i) {
-                    Ember.set(icbm, 'target',  target + '/' + i);
+                    Ember.set(icbm, 'target',  targetPackage + '/' + i);
                 });                
             }            
         },
@@ -493,11 +539,15 @@ App.ConsoleController = Ember.Controller.extend({
         launch: function () {
             if (this.get('pal') == 'unlocked') {
                 var icbms  = this.get('model.icbms');
-                icbms.forEach(function (icbm, i) {
-                    setTimeout(function () {
-                        Ember.set(icbm, 'launched', true);                        
-                    }, i * 1500);
-                });                
+                
+                if (icbms[0].fuel)
+                {                
+                    icbms.forEach(function (icbm, i) {
+                        setTimeout(function () {
+                            Ember.set(icbm, 'launched', true); 
+                        }, i * 1500);
+                    });
+                }
             }
             else if (this.get('pal') == 'drill') {
                 this.set('pal',      'locked');
