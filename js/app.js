@@ -94,6 +94,33 @@ function createTutorialMessage(auth) {
            'Authentication: ' + auth + '\n';
 }
 
+function createAlertMessage(auth) {    
+    return '*** Alert *** Alert *** Alert ***\n' +
+           '\n' +  
+           'The USN are threatening to deploy nuclear weapons against us.\n'
+           '\n' + 
+           'All military forces are put into high alert.\n' +
+           '\n' + 
+           'Authentication: ' + auth + '\n';
+}
+
+
+function createUpdateMessage(auth) {
+    var tp = [
+        makeTargetPackage(),
+        makeTargetPackage(),
+        makeTargetPackage(),
+        makeTargetPackage(),
+        makeTargetPackage()
+    ];
+    tp.sort();
+    
+    return 'Target packages '+tp[0]+', '+tp[1]+', '+tp[2]+', '+tp[3]+' and '+tp[4]+' ' +
+           'have been updated to reflect new inteligence.\n' +
+           '\n' +
+           'Authentication: ' + auth + '\n';
+}
+
 function palOk(pal) {
     return pal == 'unlocked' || pal == 'drill';
 }
@@ -188,13 +215,30 @@ App.ConsoleRoute = Ember.Route.extend({
             var auth         = nextRAuth(controller);
             var messageQueue = controller.get('messageQueue');
             messageQueue.pushObject(createTutorialMessage(auth));
-        }, 2000)
+        }, 5000)               
         
         var count = 0;
         var i = setInterval(function () {
+            count++;
             startDrill(controller);
             
-            count++;
+            if (count == 3) {
+                setTimeout(function () {
+                    var auth         = nextRAuth(controller);
+                    var messageQueue = controller.get('messageQueue');
+                    messageQueue.pushObject(createAlertMessage(auth));
+                }, 65000)
+            }
+            
+            if (count == 4) {
+                setTimeout(function () {
+                    var auth         = nextRAuth(controller);
+                    var messageQueue = controller.get('messageQueue');
+                    messageQueue.pushObject(createUpdateMessage(auth));
+                }, 60000)
+            }
+            
+            
             if (count == 5) {
                 clearInterval(i);
                 setTimeout(function () {
@@ -203,7 +247,7 @@ App.ConsoleRoute = Ember.Route.extend({
                     var tp           = makeTargetPackage();            
                     var messageQueue = controller.get('messageQueue');
                     messageQueue.pushObject(createMessage(auth, pal, tp));
-                }, 120000)
+                }, 120000);
             }
         }, 120000);
     }
@@ -513,7 +557,6 @@ App.UnlockController = Ember.Controller.extend({
         kpe: function () {
             var input = this.get('input');
             var code  = this.get('model.code');
-            console.log({input: input, code: code});
             if (input == code)
             {
                 // play sound?
