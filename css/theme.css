@@ -21,6 +21,10 @@ textarea {
     font-weight: bold;
 }
 
+a {
+    color: lime;
+}
+
 .well {
     border: 1px solid lime;
     border-radius: 5px;

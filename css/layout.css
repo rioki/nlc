@@ -1,3 +1,6 @@
+.header {
+    text-align: right;
+}
 
 #unlock {
     width: 20em;
@@ -65,3 +68,21 @@
     height: 100px;
 }
 
+#about {
+    text-align: center;
+    margin-top: 3em;    
+}
+
+#about .title {
+    margin-top: 2em;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+#about .person {
+    margin-top: 1em;
+}
+
+#about a {
+    text-decoration: none;
+}
