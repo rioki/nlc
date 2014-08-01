@@ -164,3 +164,11 @@ button.eam {
     border: 1px solid lime;
     background: #3A9C31;
 }
+
+#launch,
+#nolaunch {
+    color: black;
+    background: white;  
+    font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;    
+    text-align: justify;
+}

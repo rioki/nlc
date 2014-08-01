@@ -86,3 +86,11 @@
 #about a {
     text-decoration: none;
 }
+
+#launch,
+#nolaunch {
+    width: 650px;
+    padding: 50px 100px;
+    min-height: 850px;
+    margin: 0 auto;
+}
