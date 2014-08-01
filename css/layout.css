@@ -52,7 +52,7 @@
 #targets,
 #missile,
 #warhead,
-#launch {
+#launchbtn {
     min-height: 260px;
 }
 
@@ -63,7 +63,7 @@
     margin-bottom: 20px;
 }
 
-#launch button {
+#launchbtn button {
     width: 95%;
     height: 100px;
 }

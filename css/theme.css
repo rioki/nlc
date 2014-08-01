@@ -73,7 +73,7 @@ a {
     border-color: silver;
 }
 
-.locked #launch button {
+.locked #launchbtn button {
     color: silver;
     border-color: silver;
     background: repeating-linear-gradient(
@@ -85,7 +85,7 @@ a {
     );
 }
 
-.drill #launch button {
+.drill #launchbtn button {
     background: repeating-linear-gradient(
       -45deg,
       black,
