@@ -503,6 +503,7 @@ App.ConsoleController = Ember.Controller.extend({
                 this.set('message',  drillResults(this));
                 this.set('palInput', '');
                 this.set('tpInput',  '');
+                this.set('fueling',  0);
                 
                 var icbms  = this.get('model.icbms');
                 icbms.forEach(function (icbm, i) {
