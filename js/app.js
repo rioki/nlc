@@ -227,7 +227,7 @@ function startLaunch(ctrl) {
     // check back in 1.5 min                    
     setTimeout(function () {
         checkLaunch(ctrl);
-    }, 90000);
+    }, 65000);
 }
 
 App.IndexRoute = Ember.Route.extend({
@@ -294,9 +294,9 @@ App.ConsoleRoute = Ember.Route.extend({
                 clearInterval(i);
                 setTimeout(function () {
                     startLaunch(controller);                    
-                }, 120000);
+                }, 70000);
             }
-        }, 120000);
+        }, 70000);
     }
 });
 
@@ -517,7 +517,7 @@ App.ConsoleController = Ember.Controller.extend({
                         ctrl.set('fueling', 0);
                         clearInterval(i);
                     }
-                }, 800);              
+                }, 400);              
             } 
         },
         arm: function () {
@@ -545,7 +545,7 @@ App.ConsoleController = Ember.Controller.extend({
                     icbms.forEach(function (icbm, i) {
                         setTimeout(function () {
                             Ember.set(icbm, 'launched', true); 
-                        }, i * 1500);
+                        }, i * 1200);
                     });
                 }
             }
